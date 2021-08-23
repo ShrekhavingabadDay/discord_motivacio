@@ -1,7 +1,6 @@
 from PIL import Image, ImageDraw, ImageFont
 import uuid
 
-'''
 def break_fix(text, width, font, draw):
     if not text:
         return
@@ -32,24 +31,20 @@ def fit_text(img, text, color, font):
         x = (img.size[0] - w) // 2
         draw.text((x, y), t, font=font, fill=color)
         y += h
-'''
 
 def generate(image_path, font_path, text):
     img = Image.open(image_path)
-    W, H = img.size
 
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype(font_path, 26)
-    w,_ = draw.textsize(text, font=font)
 
-
-    fit_text(text, 26, draw, font, w, W, H)
+    fit_text(img, text, "white", font)
 
     image_name = str(uuid.uuid4()) + ".jpg"
     img.save(image_name)
 
     return image_name
-
+'''
 def fit_text(t, max_len, d, font, w, W, H):
 
     final_height = 0
@@ -76,6 +71,6 @@ def fit_text(t, max_len, d, font, w, W, H):
     print(W, w, H, final_height)
 
     d.multiline_text( ( (W-w)/2, (H-final_height)/2 ), t, fill = "white", font=font, align='center')
-
+'''
     
 

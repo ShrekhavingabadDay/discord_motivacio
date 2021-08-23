@@ -1,7 +1,13 @@
+import discord
+from discord.ext import commands
+import datetime
+import asyncio
 import markov
 import os
 import image_generator
 from random import choice
+
+client = commands.bot()
 
 current_path = os.path.abspath(os.path.dirname(__file__))
 
@@ -10,7 +16,7 @@ images = list(os.listdir(os.path.join(current_path, 'res/images')))
 fonts = list(os.listdir(os.path.join(current_path, 'res/fonts')))
 
 # initializing the markov chain
-markov_chain = markov.markov(os.path.join(current_path,'res/idezetek'), 6)
+markov_chain = markov.markov(os.path.join(current_path,'res/idezetek'), 8)
 
 
 def handle_request():
@@ -21,5 +27,4 @@ def handle_request():
 
     image_generator.generate(chosen_image_path, chosen_font_path, quote)
 
-if __name__ == "__main__":
-    handle_request()
+

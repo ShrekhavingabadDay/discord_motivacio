@@ -1,2 +1,5 @@
 beautifulsoup4
 requests
+discord
+pillow
+asyncio
