@@ -1,2 +1,2 @@
-# discord_motivacio
-Motiváló Discord bot. 
+# Idézetes képeket generáló Discord bot
+
