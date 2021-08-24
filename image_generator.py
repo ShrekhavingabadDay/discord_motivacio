@@ -1,5 +1,19 @@
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageEnhance
 import uuid
+import kacsa
+import requests
+
+def calculate_brightness(image):
+    greyscale_image = image.convert('L')
+    histogram = greyscale_image.histogram()
+    pixels = sum(histogram)
+    brightness = scale = len(histogram)
+
+    for index in range(0, scale):
+        ratio = histogram[index] / pixels
+        brightness += ratio * (-scale + index)
+
+    return 1 if brightness==255 else brightness / scale
 
 def break_fix(text, width, font, draw):
     if not text:
@@ -35,8 +49,13 @@ def fit_text(img, text, color, font):
 def generate(image_path, font_path, text):
     img = Image.open(image_path)
 
+    brightness_enhancer = ImageEnhance.Brightness(img)
+
     draw = ImageDraw.Draw(img)
-    font = ImageFont.truetype(font_path, 26)
+    font = ImageFont.truetype(font_path, 30)
+
+    brightness_factor = 0.2 / calculate_brightness(img)
+    img = brightness_enhancer.enhance(brightness_factor)
 
     fit_text(img, text, "white", font)
 
@@ -44,33 +63,18 @@ def generate(image_path, font_path, text):
     img.save(image_name)
 
     return image_name
-'''
-def fit_text(t, max_len, d, font, w, W, H):
 
-    final_height = 0
-
-    output = ''
-    current_line = ''
-    c_count = 0
-
-    for word in t.split(' '):
-
-        c_count += len(word)
-
-        if c_count >= max_len:
-            output += ('\n' + word + ' ')
-
-            _,f = d.textsize(current_line, font=font)
-            final_height += f
-
-            c_count = 0
-            current_line = ''
-        else:
-            output += (word + ' ')
-            current_line += (word + ' ')
-    print(W, w, H, final_height)
-
-    d.multiline_text( ( (W-w)/2, (H-final_height)/2 ), t, fill = "white", font=font, align='center')
-'''
+def download_image(keywords):
+    img_url = kacsa.get_image_url(keywords)
     
+    if not img_url:
+        return None
+
+    img_data = requests.get(img_url).content
+
+    img_name = str(uuid.uuid4()) + ".jpg"
+
+    with open( img_name, "wb" ) as handler:
+        handler.write(img_data)
+    return img_name
 
