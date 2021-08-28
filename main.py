@@ -32,14 +32,14 @@ def _generate_quote_image():
     quote = markov_chain.generate_text()
     return (image_generator.generate(_get_random_image(), _get_random_font(), quote))
 
-def _create_quote_image(user_text):
-    return (image_generator.generate(_get_random_image(), _get_random_font(), user_text))
+def _create_quote_image(user_text, font_size):
+    return (image_generator.generate(_get_random_image(), _get_random_font(), user_text, font_size))
 
-def _create_custom_quote_image(user_text, keywords):
+def _create_custom_quote_image(user_text, keywords, font_size):
     duck_image = _get_duck_image(keywords)
     if not duck_image:
         return None
-    generated_image = image_generator.generate(_get_duck_image(keywords), _get_random_font(), user_text)
+    generated_image = image_generator.generate(duck_image, _get_random_font(), user_text, font_size)
     os.remove(duck_image)
     return generated_image
 
@@ -56,12 +56,19 @@ async def motivacio(ctx):
     os.remove(response)
 
 @client.command(aliases=["készít", "keszit", "Készíts", "készíts"])
-async def keszits(ctx, user_text, search_terms=None):
+async def keszits(ctx, user_text, search_terms=None, text_size=1):
 
     if not search_terms:
-        response = _create_quote_image(user_text)
+        response = _create_quote_image(user_text, text_size)
     else:
-        response = _create_custom_quote_image(user_text, search_terms)
+        try:
+            response = _create_custom_quote_image(user_text, search_terms, text_size)
+        except:
+            await ctx.send("A képpel hiba adódott :(")
+            for file in os.listdir(current_path):
+                if file.endswith('.jpg'):
+                    os.remove(file)
+            return
         if not response:
             await ctx.send("Nincs találat :(")
             return

@@ -46,13 +46,13 @@ def fit_text(img, text, color, font):
         draw.text((x, y), t, font=font, fill=color)
         y += h
 
-def generate(image_path, font_path, text):
+def generate(image_path, font_path, text, font_size=1):
     img = Image.open(image_path)
 
     brightness_enhancer = ImageEnhance.Brightness(img)
 
     draw = ImageDraw.Draw(img)
-    font = ImageFont.truetype(font_path, 30)
+    font = ImageFont.truetype(font_path, 30 * font_size)
 
     brightness_factor = 0.2 / calculate_brightness(img)
     img = brightness_enhancer.enhance(brightness_factor)
