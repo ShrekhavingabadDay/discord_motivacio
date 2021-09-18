@@ -5,6 +5,7 @@ import asyncio
 import markov
 import os
 import dotenv
+import cursed
 import image_generator
 from discord.ext import commands
 from random import choice
@@ -49,6 +50,11 @@ client = commands.Bot(command_prefix="léci ")
 @client.event
 async def on_ready():
     print("A bot elérhető!")
+
+@client.command(aliases=["átkozott", "atkozot", "átkozot"])
+async def atkozott(ctx):
+    response = cursed.get_cursed_image()
+    await (ctx.send(response))
 
 @client.command(aliases=["motiváció", "Motiváció"])
 async def motivacio(ctx):
